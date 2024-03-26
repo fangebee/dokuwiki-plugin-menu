@@ -172,13 +172,18 @@ class syntax_plugin_menu extends DokuWiki_Syntax_Plugin {
                 $opts = $this->_parseOptions(trim(substr($match,5,-1)));
                 $col = $opts['col'];
                 if (!empty($col) && is_numeric($col) && $col > 0 && $col < 5)
-                    $this->rcmd['columns'] = $col;
-                if ($opts['align'] == "left")   $this->rcmd['float'] = "left";
-                if ($opts['align'] == "center") $this->rcmd['float'] = "center";
-                if ($opts['align'] == "right")  $this->rcmd['float'] = "right";
-                if ($opts['valign'] == "top")   $this->rcmd['valign'] = "vtop";
-                if ($opts['valign'] == "center") $this->rcmd['valign'] = "vcenter";
-                if ($opts['valign'] == "bottom")  $this->rcmd['valign'] = "vbottom";
+                        $this->rcmd['columns'] = $col;
+
+                if (isset($opts['align'])) {
+                    if ($opts['align'] == "left")   $this->rcmd['float'] = "left";
+                    if ($opts['align'] == "center") $this->rcmd['float'] = "center";
+                    if ($opts['align'] == "right")  $this->rcmd['float'] = "right";
+                }
+                if (isset($opts['valign'])) {
+                    if ($opts['valign'] == "top")   $this->rcmd['valign'] = "vtop";
+                    if ($opts['valign'] == "center") $this->rcmd['valign'] = "vcenter";
+                    if ($opts['valign'] == "bottom")  $this->rcmd['valign'] = "vbottom";
+                }
                 if (!empty($opts['caption']))
                     $this->rcmd['caption'] = hsc($opts['caption']);
                 if (!empty($opts['type']))
@@ -434,7 +439,7 @@ class syntax_plugin_menu extends DokuWiki_Syntax_Plugin {
         case 'internallink':
             resolve_pageid(getNS($ID),$args[0],$exists);
             $url  = wl($args[0]);
-            list($id,$hash) = explode('#',$args[0],2);
+            list($id, $hash) = sexplode('#',$args[0],2);
             if (!empty($hash)) $hash = sectionID($hash, $check);
             if ($hash) $url .= '#'.$hash;    //keep hash anchor
 
@@ -475,7 +480,7 @@ class syntax_plugin_menu extends DokuWiki_Syntax_Plugin {
 		$len = strlen($string);
 		for ($i=0; $i<=$len; $i++) {
 			// done for this one?
-			if ($string[$i] == ',' || $i == $len) {
+			if ((isset($string[$i]) && $string[$i] == ',') || $i == $len) {
 				$key = trim($key);
 				$val = trim($val);
 				if($key && $val) $data[strtolower($key)] = $val;
