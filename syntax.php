@@ -34,38 +34,6 @@ class syntax_plugin_menu extends DokuWiki_Syntax_Plugin {
 
 
    /**
-    * Get an associative array with plugin info.
-    *
-    * <p>
-    * The returned array holds the following fields:
-    * <dl>
-    * <dt>author</dt><dd>Author of the plugin</dd>
-    * <dt>email</dt><dd>Email address to contact the author</dd>
-    * <dt>date</dt><dd>Last modified date of the plugin in
-    * <tt>YYYY-MM-DD</tt> format</dd>
-    * <dt>name</dt><dd>Name of the plugin</dd>
-    * <dt>desc</dt><dd>Short description of the plugin (Text only)</dd>
-    * <dt>url</dt><dd>Website with more information on the plugin
-    * (eg. syntax description)</dd>
-    * </dl>
-    * @param none
-    * @return Array Information about this plugin class.
-    * @public
-    * @static
-    */
-    function getInfo(){
-        return array(
-            'author' => 'Matthias Grimm',
-            'email'  => 'matthiasgrimm@users.sourceforge.net',
-            //'date'   => '2009-07-25',
-			'date'   => '2018-11-27',
-            'name'   => 'Menu Plugin',
-            'desc'   => 'Shows a list of links as a nice menu card',
-            'url'    => 'http://www.dokuwiki.org/plugin:menu',
-        );
-    }
-
-   /**
     * Get the type of syntax this plugin defines.
     *
     * The type of this plugin is "protected". It has a start and an end
