@@ -13,7 +13,7 @@
  * caption (opt) Headline of the menu, default is none
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Matthias Grimm <matthiasgrimm@users.sourceforge.net>
+ * @author     Matthias Grimm <codingjoker@web.de>
  * @author     Frank Schiebel <frank@linuxmuster.net>
  */
  
@@ -138,7 +138,7 @@ class syntax_plugin_menu extends DokuWiki_Syntax_Plugin {
                 $this->_reset();        // reset object;
 
                 $opts = $this->_parseOptions(trim(substr($match,5,-1)));
-                $col = $opts['col'];
+                $col = $opts['col'] ?? null;
                 if (!empty($col) && is_numeric($col) && $col > 0 && $col < 5)
                         $this->rcmd['columns'] = $col;
 
@@ -266,82 +266,82 @@ class syntax_plugin_menu extends DokuWiki_Syntax_Plugin {
         if (empty($data)) return false;
 
         if($mode == 'xhtml'){
-            if ($data['type'] != "menubar"){
-                    $renderer->doc .= '<div class="menu menu'.$data['float'].' menu'.$data['valign'].'"';
-                    $renderer->doc .= ' style="width:' . $data['width'] . '">'."\n";
-                    if (isset($data['caption']))
-                        $renderer->doc .= '<p class="caption">'.$data['caption'].'</p>'."\n";
+            if (!isset($data['type']) or $data['type'] != "menubar"){
+                $renderer->doc .= '<div class="menu menu'.$data['float'].' menu'.$data['valign'].'"';
 
-                    $width = floor(100 / $data['columns']) . '%';
+                if (!isset($data['width'])) $data['width'] = "";
+                $renderer->doc .= ' style="width:' . $data['width'] . '">'."\n";
+                if (isset($data['caption']))
+                    $renderer->doc .= '<p class="caption">'.$data['caption'].'</p>'."\n";
 
-                    foreach($data['items'] as $item) {
-                        $renderer->doc .= '<div class="menuitem" style="width:' . $width . '">'."\n";
+                $width = floor(100 / $data['columns']) . '%';
 
-                        // create <img .. /> tag
-                        list($type, $args) = $item['image'];
-                        list($ext,$mime,$dl) = mimetype($args[0]);
-                        $class = ($ext == 'png') ? ' png' : NULL;
-                        $img = $renderer->_media($args[0],$args[1],$class,$args[3],$args[4],$args[5]);
+                foreach($data['items'] as $item) {
+                    $renderer->doc .= '<div class="menuitem" style="width:' . $width . '">'."\n";
 
-                        // create <a href= .. /> tag
-                        list($type, $args) = $item['link'];
-                        $link = $this->_getLink($type, $args, $renderer);
-                        $link['title'] = $args[1];
+                    // create <img .. /> tag
+                    list($type, $args) = $item['image'];
+                    list($ext,$mime,$dl) = mimetype($args[0]);
+                    $class = ($ext == 'png') ? ' png' : NULL;
+                    $img = $renderer->_media($args[0],$args[1],$class,$args[3],$args[4],$args[5]);
 
-                        $link['name']  = $img;
-                        $renderer->doc .= $renderer->_formatLink($link);
+                    // create <a href= .. /> tag
+                    list($type, $args) = $item['link'];
+                    $link = $this->_getLink($type, $args, $renderer);
+                    $link['title'] = $args[1];
 
-                        $link['name']  = '<span class="menutext">'.$args[1].'</span>';
-                        $renderer->doc .= '<div class="menutextcontainer">'."\n";
-                        $renderer->doc .= $renderer->_formatLink($link);
-                        $renderer->doc .= '<p class="menudesc">'.$item['descr'].'</p>';
-                        $renderer->doc .= '</div>'."\n";
+                    $link['name']  = $img;
+                    $renderer->doc .= $renderer->_formatLink($link);
 
-                        $renderer->doc .= '</div>'."\n";
-                    }
-
+                    $link['name']  = '<span class="menutext">'.$args[1].'</span>';
+                    $renderer->doc .= '<div class="menutextcontainer">'."\n";
+                    $renderer->doc .= $renderer->_formatLink($link);
+                    $renderer->doc .= '<p class="menudesc">'.$item['descr'].'</p>';
                     $renderer->doc .= '</div>'."\n";
 
-                    // Clear left/right floats, unless the 'wrap' setting is enabled.
-                    if (!$data['wrap'] && ($data['float'] == "right" || $data['float'] == "left"))
-                        $renderer->doc .= '<p style="clear:both;" />';
+                    $renderer->doc .= '</div>'."\n";
+                }
 
-                    return true;
+                $renderer->doc .= '</div>'."\n";
+
+                // Clear left/right floats, unless the 'wrap' setting is enabled.
+                if (!$data['wrap'] && ($data['float'] == "right" || $data['float'] == "left"))
+                    $renderer->doc .= '<p style="clear:both;" />';
+
+                return true;
+
+			} else {
+               // menubar mode: 1 row with small captions
+                $renderer->doc .= '<div id="menu"><ul class="menubar">'."\n";
+                //  if (isset($data['caption']))
+                //      $renderer->doc .= '<p class="caption">'.$data['caption'].'</p>'."\n";
+
+                foreach($data['items'] as $item) {
+                    $renderer->doc .= '<li>'."\n";
+
+                    // create <img .. /> tag
+                    list($type, $args) = $item['image'];
+                    list($ext,$mime,$dl) = mimetype($args[0]);
+                    $class = ($ext == 'png') ? ' png' : NULL;
+                    $img = $renderer->_media($args[0],$item['descr'],$class,$args[3],$args[4],$args[5]);
+
+                    // create <a href= .. /> tag
+                    list($type, $args) = $item['link'];
+                    $link = $this->_getLink($type, $args, $renderer);
+                    $link['title'] = $args[1];
+
+                    $link['name']  = $img;
+                    $renderer->doc .= $renderer->_formatLink($link);
+
+                    $link['name']  = '<p class="menutext">'.$args[1].'</p>';
+                    $renderer->doc .= $renderer->_formatLink($link);
+                    //$renderer->doc .= '<p class="menudesc">'.$item['descr'].'</p>';
+                    $renderer->doc .= '</li>';
+                }
+
+                $renderer->doc .= '</ul></div>'."\n";
+                return true;
             }
-            // menubar mode: 1 row with small captions
-            if ($data['type'] == "menubar"){
-                    $renderer->doc .= '<div id="menu"><ul class="menubar">'."\n";
-                  //  if (isset($data['caption']))
-                  //      $renderer->doc .= '<p class="caption">'.$data['caption'].'</p>'."\n";
-
-                    foreach($data['items'] as $item) {
-                        $renderer->doc .= '<li>'."\n";
-
-                        // create <img .. /> tag
-                        list($type, $args) = $item['image'];
-                        list($ext,$mime,$dl) = mimetype($args[0]);
-                        $class = ($ext == 'png') ? ' png' : NULL;
-                        $img = $renderer->_media($args[0],$item['descr'],$class,$args[3],$args[4],$args[5]);
-
-                        // create <a href= .. /> tag
-                        list($type, $args) = $item['link'];
-                        $link = $this->_getLink($type, $args, $renderer);
-                        $link['title'] = $args[1];
-
-                        $link['name']  = $img;
-                        $renderer->doc .= $renderer->_formatLink($link);
-
-                        $link['name']  = '<p class="menutext">'.$args[1].'</p>';
-                        $renderer->doc .= $renderer->_formatLink($link);
-                        //$renderer->doc .= '<p class="menudesc">'.$item['descr'].'</p>';
-                        $renderer->doc .= '</li>';
-                    }
-
-                    $renderer->doc .= '</ul></div>'."\n";
-
-                    return true;
-            }
-
         }
         return false;
     }
