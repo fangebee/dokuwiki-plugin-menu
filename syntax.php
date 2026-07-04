@@ -162,7 +162,10 @@ class syntax_plugin_menu extends DokuWiki_Syntax_Plugin {
             break;
           case DOKU_LEXER_MATCHED:
 
-                $menuitem = preg_split('/\|/', trim(substr($match,6,-7)));
+                $menuitem = preg_split('/\|(?![^\[]*\]\])(?![^{]*\}\})/', trim(substr($match,6,-7)));
+                if ($menuitem === false || count($menuitem) != 4) {
+                    break;
+                }
 
                 $title = hsc($menuitem[0]);
                 if (substr($menuitem[2],0,2) == "{{")
@@ -264,6 +267,7 @@ class syntax_plugin_menu extends DokuWiki_Syntax_Plugin {
     function render($mode, Doku_Renderer $renderer, $data) {
 
         if (empty($data)) return false;
+        if (!isset($data['items'])) return false;
 
         if($mode == 'xhtml'){
             if (!isset($data['type']) or $data['type'] != "menubar"){
