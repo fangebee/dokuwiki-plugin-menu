@@ -2,6 +2,7 @@
 div.menu {
     display:flex;
     flex-wrap:wrap;
+    justify-content: center;
 }
 
 div.menucenter {
@@ -28,10 +29,27 @@ div.menuvbottom .menuitem {
     align-items:flex-end;
 }
 
+div.menu1cols .menuitem {
+    width: 80%;
+}
+
+div.menu2cols .menuitem {
+    width: 49%;
+}
+
+div.menu3cols .menuitem {
+    width: 32%;
+}
+
+div.menu4cols .menuitem {
+    width: 24%;
+}
+
 div.menuitem {
     display:flex;
     align-items:flex-start;
     text-align:left;
+    min-width: 250px;
 }
 
 div.menu p.caption {

@@ -271,17 +271,15 @@ class syntax_plugin_menu extends DokuWiki_Syntax_Plugin {
 
         if($mode == 'xhtml'){
             if (!isset($data['type']) or $data['type'] != "menubar"){
-                $renderer->doc .= '<div class="menu menu'.$data['float'].' menu'.$data['valign'].'"';
+                $renderer->doc .= '<div class="menu menu'.$data['float'].' menu'.$data['valign'].' menu'.$data['columns'].'cols"';
 
                 if (!isset($data['width'])) $data['width'] = "";
                 $renderer->doc .= ' style="width:' . $data['width'] . '">'."\n";
                 if (isset($data['caption']))
                     $renderer->doc .= '<p class="caption">'.$data['caption'].'</p>'."\n";
 
-                $width = floor(100 / $data['columns']) . '%';
-
                 foreach($data['items'] as $item) {
-                    $renderer->doc .= '<div class="menuitem" style="width:' . $width . '">'."\n";
+                    $renderer->doc .= '<div class="menuitem"'."\n";
 
                     // create <img .. /> tag
                     list($type, $args) = $item['image'];
