@@ -1,7 +1,7 @@
 base   menu
 author Easter-Eggs
 email  admin@easter-eggs.com
-date   2026-07-04
+date   2026-10-14
 name   Menu Plugin
 desc   Shows a list of links as a nice menu card
-url    https://github.com/fangebee/dokuwiki-plugin-menu
+url    https://www.dokuwiki.org/plugin:menu
