@@ -314,7 +314,7 @@ class syntax_plugin_menu extends DokuWiki_Syntax_Plugin {
 
                 return true;
 
-			} else {
+            } else {
                // menubar mode: 1 row with small captions
                 $renderer->doc .= '<div id="menu"><ul class="menubar">'."\n";
                 //  if (isset($data['caption']))
@@ -442,48 +442,48 @@ class syntax_plugin_menu extends DokuWiki_Syntax_Plugin {
     * @private
     */
     function _parseOptions($string) {
-		$data = array();
+        $data = array();
 
-		$dq    = false;
-		$iskey = true;
-		$key   = '';
-		$val   = '';
+        $dq    = false;
+        $iskey = true;
+        $key   = '';
+        $val   = '';
 
-		$len = strlen($string);
-		for ($i=0; $i<=$len; $i++) {
-			// done for this one?
-			if ((isset($string[$i]) && $string[$i] == ',') || $i == $len) {
-				$key = trim($key);
-				$val = trim($val);
-				if($key && $val) $data[strtolower($key)] = $val;
-				$iskey = true;
-				$key = '';
-				$val = '';
-				continue;
-			}
+        $len = strlen($string);
+        for ($i=0; $i<=$len; $i++) {
+            // done for this one?
+            if ((isset($string[$i]) && $string[$i] == ',') || $i == $len) {
+                $key = trim($key);
+                $val = trim($val);
+                if($key && $val) $data[strtolower($key)] = $val;
+                $iskey = true;
+                $key = '';
+                $val = '';
+                continue;
+            }
 
-			// double quotes
-			if ($string[$i] == '"') {
-				$dq = $dq ? false : true;
-				continue;
-			}
+            // double quotes
+            if ($string[$i] == '"') {
+                $dq = $dq ? false : true;
+                continue;
+            }
 
-			// key value separator
-			if ($string[$i] == '=' && !$dq && $iskey) {
-				$iskey = false;
-				continue;
-			}
+            // key value separator
+            if ($string[$i] == '=' && !$dq && $iskey) {
+                $iskey = false;
+                continue;
+            }
 
-			// default
-			if ($iskey)
-				$key .= $string[$i];
-			else
-				$val .= $string[$i];
-		}
-		return $data;
+            // default
+            if ($iskey)
+                $key .= $string[$i];
+            else
+                $val .= $string[$i];
+        }
+        return $data;
     }
 
 }
  
-//Setup VIM: ex: et ts=4 enc=utf-8 :
+//Setup VIM: et:ts=4
 ?>
